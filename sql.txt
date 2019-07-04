@@ -1,0 +1,46 @@
+CREATE DATABASE IF NOT EXISTS WalletHub;
+ 
+USE WalletHub;
+
+CREATE TABLE log (
+  start_date timestamp,
+  ip varchar(255),
+  request varchar(255),
+  status int,
+  agent varchar(255)
+);
+
+
+CREATE TABLE blocked (
+  ltime timestamp,
+  ip varchar(255),
+  reason varchar(255)
+);
+
+
+select ip, count(*) cnt from log
+where start_date between STR_TO_DATE('2017-01-01.15:00:00', '%Y-%m-%d.%H:%i:%s')
+and ADDTIME(STR_TO_DATE('2017-01-01.15:00:00', '%Y-%m-%d.%H:%i:%s'), '59:59')
+group by ip,agent
+having count(*) > 200;
+
+select ip, count(*) from log
+where start_date between STR_TO_DATE('2017-01-01.00:00:00', '%Y-%m-%d.%H:%i:%s')
+and ADDTIME(STR_TO_DATE('2017-01-01.00:00:00', '%Y-%m-%d.%H:%i:%s'), '23:59:59')
+group by ip
+having count(*) > 500;
+
+select * from log
+where ip = '192.168.11.231'
+and start_date between STR_TO_DATE('2017-01-01.15:00:00', '%Y-%m-%d.%H:%i:%s')
+and ADDTIME(STR_TO_DATE('2017-01-01.15:00:00', '%Y-%m-%d.%H:%i:%s'), '59:59');
+
+select * from log
+where ip = '192.168.102.136'
+and start_date between STR_TO_DATE('2017-01-01.00:00:00', '%Y-%m-%d.%H:%i:%s')
+and ADDTIME(STR_TO_DATE('2017-01-01.00:00:00', '%Y-%m-%d.%H:%i:%s'), '23:59:59');
+
+
+select * from log;
+
+select * from blocked;
